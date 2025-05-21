@@ -1,2 +1,2 @@
-# ts-lib-template
-Typescript library template
+# discord-command-options
+Standalone type-safe application command option parser
