@@ -74,3 +74,11 @@ export class ApplicationCommandOptions<CommandInteractionType extends Applicatio
         return <AutocompleteFocusedOption>this._options.get(this._focused)!;
     }
 }
+
+export function getFocusedOption(options: APIApplicationCommandInteractionDataOption<InteractionType.ApplicationCommandAutocomplete>[]): AutocompleteFocusedOption {
+    const focused = options.find(option => "focused" in option && option.focused);
+    if (!focused) {
+        throw new ApplicationCommandOptionResolutionError("Unabled to find focused option");
+    }
+    return <AutocompleteFocusedOption>focused;
+}
