@@ -20,7 +20,8 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
-  ApplicationCommandOptions: () => ApplicationCommandOptions
+  ApplicationCommandOptions: () => ApplicationCommandOptions,
+  getFocusedOption: () => getFocusedOption
 });
 module.exports = __toCommonJS(index_exports);
 var import_v10 = require("discord-api-types/v10");
@@ -90,8 +91,16 @@ var ApplicationCommandOptions = class {
     return this._options.get(this._focused);
   }
 };
+function getFocusedOption(options) {
+  const focused = options.find((option) => "focused" in option && option.focused);
+  if (!focused) {
+    throw new ApplicationCommandOptionResolutionError("Unabled to find focused option");
+  }
+  return focused;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  ApplicationCommandOptions
+  ApplicationCommandOptions,
+  getFocusedOption
 });
 //# sourceMappingURL=index.js.map

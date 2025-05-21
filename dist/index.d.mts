@@ -1,14 +1,16 @@
-import { ApplicationCommandOptionType, APIInteractionDataOptionBase, InteractionType, APIApplicationCommandInteractionDataOption } from 'discord-api-types/v10';
+import { ApplicationCommandOptionType, APIApplicationCommandInteractionDataOption, InteractionType } from 'discord-api-types/v10';
 
 type ApplicationCommandInteractionTypes = InteractionType.ApplicationCommand | InteractionType.ApplicationCommandAutocomplete;
 type ExtractedOption<CommandInteractionType extends ApplicationCommandInteractionTypes, OptionType extends ApplicationCommandOptionType> = Extract<APIApplicationCommandInteractionDataOption<CommandInteractionType>, {
     type: OptionType;
 }>;
 type SubcommandOptionType = ApplicationCommandOptionType.Subcommand | ApplicationCommandOptionType.SubcommandGroup;
-type FocusableOptionType = ApplicationCommandOptionType.String | ApplicationCommandOptionType.Integer | ApplicationCommandOptionType.Number;
-interface AutocompleteFocusedOption extends APIInteractionDataOptionBase<FocusableOptionType, string> {
+type FocusableOptionType = Extract<APIApplicationCommandInteractionDataOption<InteractionType.ApplicationCommandAutocomplete>, {
+    focused?: boolean;
+}>["type"];
+type AutocompleteFocusedOption<OptionType extends FocusableOptionType = FocusableOptionType> = Omit<ExtractedOption<InteractionType.ApplicationCommandAutocomplete, OptionType>, "focused"> & {
     focused: true;
-}
+};
 interface BaseGetOptionQuery<OptionType extends ApplicationCommandOptionType> {
     name: string;
     type: OptionType;
@@ -29,5 +31,6 @@ declare class ApplicationCommandOptions<CommandInteractionType extends Applicati
     get group(): string | null;
     getFocused(): AutocompleteFocusedOption;
 }
+declare function getFocusedOption(options: APIApplicationCommandInteractionDataOption<InteractionType.ApplicationCommandAutocomplete>[]): AutocompleteFocusedOption;
 
-export { ApplicationCommandOptions, type AutocompleteFocusedOption, type FocusableOptionType, type SubcommandOptionType };
+export { ApplicationCommandOptions, type AutocompleteFocusedOption, type FocusableOptionType, type SubcommandOptionType, getFocusedOption };

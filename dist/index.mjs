@@ -66,7 +66,15 @@ var ApplicationCommandOptions = class {
     return this._options.get(this._focused);
   }
 };
+function getFocusedOption(options) {
+  const focused = options.find((option) => "focused" in option && option.focused);
+  if (!focused) {
+    throw new ApplicationCommandOptionResolutionError("Unabled to find focused option");
+  }
+  return focused;
+}
 export {
-  ApplicationCommandOptions
+  ApplicationCommandOptions,
+  getFocusedOption
 };
 //# sourceMappingURL=index.mjs.map
