@@ -1,6 +1,6 @@
 {
   "name": "discord-command-options",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Standalone type-safe application command option parser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
