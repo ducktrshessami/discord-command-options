@@ -1,15 +1,11 @@
-import { APIApplicationCommandInteractionDataOption, APIInteractionDataOptionBase, ApplicationCommandOptionType, InteractionType } from "discord-api-types/v10";
+import { APIApplicationCommandInteractionDataOption, ApplicationCommandOptionType, InteractionType } from "discord-api-types/v10";
 import { ApplicationCommandOptionResolutionError } from "./error";
 
 type ApplicationCommandInteractionTypes = InteractionType.ApplicationCommand | InteractionType.ApplicationCommandAutocomplete;
 type ExtractedOption<CommandInteractionType extends ApplicationCommandInteractionTypes, OptionType extends ApplicationCommandOptionType> = Extract<APIApplicationCommandInteractionDataOption<CommandInteractionType>, { type: OptionType; }>;
 export type SubcommandOptionType = ApplicationCommandOptionType.Subcommand | ApplicationCommandOptionType.SubcommandGroup;
-export type FocusableOptionType = ApplicationCommandOptionType.String |
-    ApplicationCommandOptionType.Integer |
-    ApplicationCommandOptionType.Number;
-export interface AutocompleteFocusedOption extends APIInteractionDataOptionBase<FocusableOptionType, string> {
-    focused: true;
-}
+export type FocusableOptionType = Extract<APIApplicationCommandInteractionDataOption<InteractionType.ApplicationCommandAutocomplete>, { focused?: boolean }>["type"];
+export type AutocompleteFocusedOption<OptionType extends FocusableOptionType = FocusableOptionType> = Omit<ExtractedOption<InteractionType.ApplicationCommandAutocomplete, OptionType>, "focused"> & { focused: true };
 interface BaseGetOptionQuery<OptionType extends ApplicationCommandOptionType> {
     name: string;
     type: OptionType;
